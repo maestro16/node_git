@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>Express Chat Form</title>
+   <meta charset="utf-8">
+   <meta name="author" content="Ilia Busnuk">
+     <style>
+     span {position:fixed; right:20px; top:10px;border:double; padding: 15px; border-radius:20px; width:30%;} p {border-radius: solid 1px silver}
+ </style>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+     <script src="//netdna.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+  <script>
+     $(function(){
+
+             $('#but').delay(5000).fadeOut(200);
+
+         var files;
+         var reader = new FileReader();
+         var cv = document.createElement("canvas");
+         var cvContext = cv.getContext("2d");
+         $('input[type=file]').change(function(){
+            files = this.files;
+            reader.readAsDataURL(files[0]);
+         });
+
+
+       	var socket = io();
+        socket.on('chat message push', function(msg){
+           $('#chatting').append($('<p>').html(msg));
+        });
+         socket.on('file message push', function(path) {
+            $('#chatting').append(path + '<br>');
+         })
+
+        $('#clear').click(function(e) {
+            e.preventDefault();
+            $('#chatting').empty();
+        })
+       $(document).keydown(function(e) {
+
+          if(e.which === 13) {
+
+              e.preventDefault();
+              $('html, body').animate({
+                  scrollTop: 100000000
+              }, 200);
+              if($('#i').val() !== '') socket.emit('chat message', $('#i').val()); 
+              $('#i').val('');
+              console.log(files);
+              if(files != undefined) {
+                  var str = reader.result;
+                  socket.emit('file message', str);
+                  console.log(files);
+                  $('input[type=file]').val('');
+                  files = undefined;
+
+
+              }
+          }
+          });
+
+
+     });
+
+  </script>
+ </head>
+ <body>
+    <h1>Чат:</h1>
+    <div class="jumbotron" style="width:40%">
+        <div class="container">
+    <div id="chatting" ></div>
+        </div>
+    </div>
+
+    <span><h2>Введите сообщение:</h2>
+      <input id="i" class="form-control" placeholder="Введите текст" style="width:80%">
+   <input type="file" name="img" accept="image/jpeg,image/png,image/gif,image/jpg" class="btn btn-default">
+        <button id="clear" class="btn btn-default">Очистить чат</button><br>
+        <div id="but">Отправка сообщений происходит по нажатию кнопки <strong>"Enter"</strong></div>
+        </span>
+
+
+    <div class="ajax-respond"></div>
+ </body>
+</html>
