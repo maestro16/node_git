@@ -1,0 +1,15 @@
+{
+  "name": "captcha",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "start"
+  },
+  "author": "Ilia Busnuk",
+  "dependencies": {
+    "body-parser": "^1.15.1",
+    "captchapng": "0.0.1",
+    "express": "~4.13.4"
+  }
+}

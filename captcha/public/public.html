@@ -1,0 +1,39 @@
+<html>
+<head>
+	<title>Captcha Page</title>
+	<meta name="author" content="Ilia Busnuk">
+	<!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+	<script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+	<script>
+	$(document).ready(function(){
+		$("#back").submit(function(){
+			event.preventDefault();
+		})
+		$("#submit").click(function(){
+			var data = {
+				"src" : $("#gottem").val()
+			};
+			$.ajax({
+				method: "POST",
+				url: "/captcha",
+				data: data
+			})
+			.success(function(result){
+				$("h1").html(result.answ);
+			})
+		})
+	})
+	</script>
+</head>
+<body>
+ <h1></h1>
+ <div class="col-lg-2">
+	<form id="back">
+		<img src="/captcha.png"><br><br>
+		<input type="text"  class="form-control" id="gottem"></input><br><br>
+		<button type="submit" class="btn btn-success" id="submit">Проверить</button>
+	</form>
+</div>
+</body>
+</html>
